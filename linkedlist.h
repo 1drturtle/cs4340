@@ -27,8 +27,14 @@ int main_ll(int argc, char *argv[])
     // node.next = &node2;
     // list = &node;
     // printf("%d\n", list->value);
+
+    // Manually Allocate list to the size of Node
     list = malloc(sizeof(Node));
+    // empty list
     list->next = NULL;
+    insert_ll(5, &list);
+    printf("%d\n", list->next->value);
+    // destroy it
     destroy_ll(&list);
 
     return 0;
@@ -37,15 +43,19 @@ int main_ll(int argc, char *argv[])
 // Insert a node into a sorted linked list.
 void insert_ll(int value, NodePtr *listPtr)
 {
-    // Node n = {value, NULL};
     NodePtr list = *listPtr;
 
-    if (list == NULL)
+    if (list == NULL || value < list->value)
     {
         // manually allocate memory for the node. Will not be destroyed after function call
         NodePtr new = malloc(sizeof(Node));
+        new->value = value;
+        // the next element is NULL if list == NULL else next is list->next.
+        new->next = list;
         *listPtr = new;
     }
+    else // continue
+        insert_ll(value, &(list->next));
 }
 
 // Destroy a linked list.
