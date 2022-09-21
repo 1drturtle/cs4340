@@ -13,13 +13,16 @@ typedef Node *NodePtr;
 
 void insert_ll(int value, NodePtr *listPtr);
 void destroy_ll(NodePtr *listPtr);
+void print_ll(NodePtr list);
+void delete_ll(int value, NodePtr *listPtr);
 
 int main_ll(int argc, char *argv[])
 {
     // NULL only applies to pointers
     // means: does not point to anything
     // if list points to NULL, is empty
-    Node *list = NULL;
+    NodePtr list = NULL;
+    NodePtr *listPtr = &list;
     // Node node = {42, NULL};
     // Node node2 = {12, NULL};
     // node.next POINTS TO node2
@@ -29,11 +32,14 @@ int main_ll(int argc, char *argv[])
     // printf("%d\n", list->value);
 
     // Manually Allocate list to the size of Node
-    list = malloc(sizeof(Node));
-    // empty list
-    list->next = NULL;
-    insert_ll(5, &list);
-    printf("%d\n", list->next->value);
+    insert_ll(42, listPtr);
+    insert_ll(100, listPtr);
+    insert_ll(6, listPtr);
+
+    delete_ll(6, listPtr);
+    delete_ll(100, listPtr);
+
+    print_ll(list);
     // destroy it
     destroy_ll(&list);
 
@@ -45,7 +51,7 @@ void insert_ll(int value, NodePtr *listPtr)
 {
     NodePtr list = *listPtr;
 
-    if (list == NULL || value < list->value)
+    if (list == NULL || value <= list->value)
     {
         // manually allocate memory for the node. Will not be destroyed after function call
         NodePtr new = malloc(sizeof(Node));
@@ -69,5 +75,32 @@ void destroy_ll(NodePtr *listPtr)
         // opposite of malloc
         free(list);
         *listPtr = NULL;
+    }
+}
+
+void print_ll(NodePtr list)
+{
+    if (list != NULL)
+    {
+        printf("%d->", list->value);
+        print_ll(list->next);
+    }
+    else
+        printf("%s\n", list);
+}
+
+void delete_ll(int value, NodePtr *listPtr)
+{
+    NodePtr list = *listPtr;
+    if (list != NULL)
+    {
+        // sorted list so stop if the current value is bigger than search value
+        if (list->value < value)
+            delete_ll(value, &(list->next));
+        else if (list->value == value)
+        {
+            *listPtr = list->next;
+            free(list);
+        }
     }
 }

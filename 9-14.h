@@ -20,7 +20,7 @@ int main_9_14(int argc, char *argv[])
     // print_in_order(a, 4);
 
     // binary search
-    printf("%lld\n", binary_search(a, 8, 9));
+    printf("%lld\n", binary_search(a, 8, 8));
 
     return 0;
 }
@@ -43,23 +43,21 @@ size_t binary_search(int arr[], size_t length, int target)
 
     // keep track of current search index
     // each function knows what index to look for
-
-    int bounded = 0;
-
     int mid = arr[length / 2];
-    if (mid == target)
+    int changes = 0;
+
+    if (target == mid)
     {
-        return bounded + length / 2;
+        return changes + length / 2;
     }
     else if (target < mid)
     {
-        bounded -= length / 2;
-        return bounded + binary_search(arr, length / 2, target);
+        return changes + binary_search(arr, length / 2, target);
     }
     else if (target > mid)
     {
-        bounded += length / 2;
-        return bounded + binary_search(arr + length / 2, length / 2, target);
+        changes = length / 2;
+        return changes + binary_search(arr + length / 2, length / 2, target);
     }
     return -1;
 }
