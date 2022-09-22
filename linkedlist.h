@@ -15,6 +15,7 @@ void insert_ll(int value, NodePtr *listPtr);
 void destroy_ll(NodePtr *listPtr);
 void print_ll(NodePtr list);
 void delete_ll(int value, NodePtr *listPtr);
+void purge_ll(int value, NodePtr *listPtr);
 
 int main_ll(int argc, char *argv[])
 {
@@ -33,11 +34,10 @@ int main_ll(int argc, char *argv[])
 
     // Manually Allocate list to the size of Node
     insert_ll(42, listPtr);
-    insert_ll(100, listPtr);
+    insert_ll(42, listPtr);
     insert_ll(6, listPtr);
 
-    delete_ll(6, listPtr);
-    delete_ll(100, listPtr);
+    purge_ll(42, listPtr);
 
     print_ll(list);
     // destroy it
@@ -98,6 +98,20 @@ void delete_ll(int value, NodePtr *listPtr)
         if (list->value < value)
             delete_ll(value, &(list->next));
         else if (list->value == value)
+        {
+            *listPtr = list->next;
+            free(list);
+        }
+    }
+}
+
+void purge_ll(int value, NodePtr *listPtr)
+{
+    NodePtr list = *listPtr;
+    if (list != NULL)
+    {
+        purge_ll(value, &(list->next));
+        if (value == list->value)
         {
             *listPtr = list->next;
             free(list);
