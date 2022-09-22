@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Sorted, dynamically sized list
 typedef struct array_list
 {
     int *array;
@@ -11,10 +12,15 @@ typedef struct array_list
 
 } ArrayList;
 
+// create a new array list
 ArrayList *create_al();
+// destroy an array list
 void destroy_al(ArrayList *listPtr);
+// print out all elements of an array list
 void print_al(ArrayList list);
+// insert an element into an arraylist.
 void insert_al(int value, ArrayList *listPtr);
+void resize_if_full(ArrayList *listPtr);
 
 int main_al(int argc, char *argv[])
 {
@@ -55,4 +61,24 @@ void print_al(ArrayList list)
 
 void insert_al(int value, ArrayList *listPtr)
 {
+    // re-size if full
+
+    // insert
+    size_t i;
+    for (i = (listPtr->length)++;
+         i > 0 && (listPtr->array)[i - 1] > value;
+         i--)
+    {
+        listPtr->array[i] = listPtr->array[i - 1];
+    }
+    listPtr->array[i] = value;
+}
+void resize_if_full(ArrayList *listPtr)
+{
+    if (listPtr->length == listPtr->capacity)
+    {
+        listPtr->capacity *= 2;
+        // realloc: re-allocate memory
+        listPtr->array = realloc(listPtr->array, listPtr->capacity * sizeof(int));
+    }
 }
