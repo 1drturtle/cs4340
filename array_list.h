@@ -20,18 +20,29 @@ ArrayList *create_al();
 void destroy_al(ArrayList *listPtr);
 // print out all elements of an array list
 void print_al(ArrayList list);
-// insert an element into an arraylist.
+// insert an element into an array list.
 void insert_al(int value, ArrayList *listPtr);
+// re-size array list if array list is full
 void resize_if_full(ArrayList *listPtr);
+// delete an element from the array list
+void delete_al(int value, ArrayList *listPtr);
 
 int main_al(int argc, char *argv[])
 {
     ArrayList *listPtr = create_al();
     ArrayList list = *listPtr;
-    for (int i = 100; i >= 0; --i)
+    for (int i = 10; i >= 0; --i)
     {
         insert_al(i, listPtr);
     }
+
+    insert_al(0, listPtr);
+    insert_al(5, listPtr);
+    insert_al(10, listPtr);
+
+    delete_al(0, listPtr);
+    delete_al(5, listPtr);
+    delete_al(10, listPtr);
 
     print_al(*listPtr);
     destroy_al(listPtr);
@@ -43,8 +54,8 @@ ArrayList *create_al()
     ArrayList *new = malloc(sizeof(ArrayList));
     new->length = 0;
     new->capacity = INITIAL_CAPACITY;
-    // new.array = malloc(new.capacity * sizeof(int));
 
+    // new.array = malloc(new.capacity * sizeof(int));
     // calloc(length, size) for allocating array
     new->array = calloc(new->capacity, sizeof(int));
 
@@ -55,15 +66,6 @@ void destroy_al(ArrayList *listPtr)
 {
     free(listPtr->array);
     free(listPtr);
-}
-
-void print_al(ArrayList list)
-{
-    for (size_t i = 0; i < list.length; i++)
-    {
-        printf("%d,", list.array[i]);
-    }
-    puts("");
 }
 
 void insert_al(int value, ArrayList *listPtr)
@@ -81,6 +83,7 @@ void insert_al(int value, ArrayList *listPtr)
     }
     listPtr->array[i] = value;
 }
+
 void resize_if_full(ArrayList *listPtr)
 {
     if (listPtr->length == listPtr->capacity)
@@ -89,4 +92,32 @@ void resize_if_full(ArrayList *listPtr)
         // realloc: re-allocate memory
         listPtr->array = realloc(listPtr->array, listPtr->capacity * sizeof(int));
     }
+}
+
+void print_al(ArrayList list)
+{
+    for (size_t i = 0; i < list.length; i++)
+    {
+        printf("%d,", list.array[i]);
+    }
+    puts("");
+}
+
+void delete_al(int value, ArrayList *listPtr)
+{
+    // loop to find element
+    size_t i;
+    for (i = listPtr->length; i > 0 && listPtr->array[i - 1] > value; --i)
+        ;
+
+    if (i == 0 || listPtr->array[i - 1] < value)
+        return;
+
+    for (; i < listPtr->length; ++i)
+    {
+        listPtr->array[i - 1] = listPtr->array[i];
+    }
+
+    // reduce length of list
+    --listPtr->length;
 }
