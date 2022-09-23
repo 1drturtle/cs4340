@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+size_t INITIAL_CAPACITY = 8;
+
 // Sorted, dynamically sized list
 typedef struct array_list
 {
@@ -26,7 +28,12 @@ int main_al(int argc, char *argv[])
 {
     ArrayList *listPtr = create_al();
     ArrayList list = *listPtr;
-    print_al(list);
+    for (int i = 100; i >= 0; --i)
+    {
+        insert_al(i, listPtr);
+    }
+
+    print_al(*listPtr);
     destroy_al(listPtr);
     return 0;
 }
@@ -35,7 +42,7 @@ ArrayList *create_al()
 {
     ArrayList *new = malloc(sizeof(ArrayList));
     new->length = 0;
-    new->capacity = 8;
+    new->capacity = INITIAL_CAPACITY;
     // new.array = malloc(new.capacity * sizeof(int));
 
     // calloc(length, size) for allocating array
@@ -62,6 +69,7 @@ void print_al(ArrayList list)
 void insert_al(int value, ArrayList *listPtr)
 {
     // re-size if full
+    resize_if_full(listPtr);
 
     // insert
     size_t i;
