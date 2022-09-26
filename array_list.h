@@ -26,6 +26,8 @@ void insert_al(int value, ArrayList *listPtr);
 void resize_if_full(ArrayList *listPtr);
 // delete an element from the array list
 void delete_al(int value, ArrayList *listPtr);
+// remove all of an element from array list
+void purge_al(int value, ArrayList *listPtr);
 
 int main_al(int argc, char *argv[])
 {
@@ -120,4 +122,8 @@ void delete_al(int value, ArrayList *listPtr)
 
     // reduce length of list
     --listPtr->length;
+}
+void purge_al(int value, ArrayList *listPtr)
+{
+    
 }

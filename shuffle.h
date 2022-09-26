@@ -1,20 +1,36 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-char *SUITS[] = {"Diamonds", "Clubs", "Hearts", "Spades"};
-char *FACES[] = {"Deuce", "Crab", "Sharp Top", "Nickel", "Sax", "Fishhook", "Snowman", "Niner", "Dime", "Boy", "Stenographer", "Cowboy", "Seed"};
-int FACE_COUNT = 13;
-int SUIT_COUNT = 4;
+const int FACE_COUNT = 13;
+const int SUIT_COUNT = 4;
 
-// print_card(deck[X])
-void print_card(int card_index);
+typedef struct card
+{
+    char *face;
+    char *suit;
+} Card;
+
+void fillDeck(Card deck[], char *faces[], char *suits[]);
+void shuffle(Card deck[]);
+void deal(Card deck[]);
+int randRange(int lower, int upper);
+
 int shuffle_main(int argc, char *argv[])
 {
-    int deck[52] = {};
-    for (int i = 0; i < FACE_COUNT * SUIT_COUNT; i++)
-    {
-        deck[i] = i;
-    }
-    print_card(1);
+    char *FACES[] = {"Deuce", "Crab", "Sharp Top", "Nickel", "Sax", "Fishhook", "Snowman", "Niner", "Dime", "Boy", "Stenographer", "Cowboy", "Seed"};
+    char *SUITS[] = {"Diamonds", "Clubs", "Hearts", "Spades"};
+
+    srand(42);
+
+    Card cards[52];
+
+    fillDeck(cards, FACES, SUITS);
+
+    deal(cards);
+
+    shuffle(cards);
+
+    deal(cards);
 
     // shuffle (3/2 * log_2(# of cards)) of times (9 for 52)
 
@@ -22,8 +38,44 @@ int shuffle_main(int argc, char *argv[])
     // fisher-yates shuffling
     // for each element, pick a random index equal to or greater than current, and then swap.
 }
-
-void print_card(int card_index)
+void fillDeck(Card deck[52], char *faces[], char *suits[])
 {
-    printf("%s of %s\n", FACES[card_index % FACE_COUNT], SUITS[card_index / FACE_COUNT]);
+    for (size_t i = 0; i < FACE_COUNT * SUIT_COUNT; i++)
+    {
+        deck[i].face = faces[i % FACE_COUNT];
+        deck[i].suit = suits[i / FACE_COUNT];
+    }
+}
+void deal(Card deck[])
+{
+    for (size_t i = 0; i < FACE_COUNT * SUIT_COUNT; i++)
+    {
+        printf("%s of %s\n", deck[i].face, deck[i].suit);
+    }
+}
+
+int randRange(int lower, int upper)
+{
+    // minimum is 0 + lower.
+    // max is upper
+
+    // ex: lower 3, upper 6
+    // rand % 4 + 3
+    // 0-3 + 3
+
+    return (rand() % (upper - lower + 1)) + lower;
+}
+
+void shuffle(Card deck[])
+{
+    int random;
+    for (int i = 0; i < 52; i++)
+    {
+        // we never want index 52
+        random = randRange(i, 52 - 1);
+
+        Card tmp = deck[random];
+        deck[random] = deck[i];
+        deck[i] = tmp;
+    }
 }
