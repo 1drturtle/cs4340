@@ -12,13 +12,17 @@ typedef struct card
 } Card;
 
 void fillDeck(Card deck[], char *faces[], char *suits[]);
+// fisher-yates shuffling
+// for each element, pick a random index equal to or greater than current, and then swap.
 void shuffle(Card deck[]);
 void deal(Card deck[]);
 int randRange(int lower, int upper);
 
 int shuffle_main(int argc, char *argv[])
 {
-    char *FACES[] = {"Deuce", "Crab", "Sharp Top", "Nickel", "Sax", "Fishhook", "Snowman", "Niner", "Dime", "Boy", "Stenographer", "Cowboy", "Seed"};
+    char *FACES[] = {
+        "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+        "Jack", "Queen", "King", "Ace"};
     char *SUITS[] = {"Diamonds", "Clubs", "Hearts", "Spades"};
 
     srand(42);
@@ -34,13 +38,9 @@ int shuffle_main(int argc, char *argv[])
     // shuffle the cards ONCE using fisher-yates
     shuffle(cards);
 
+    // deal (print) the cards
     deal(cards);
-
     // shuffle (3/2 * log_2(# of cards)) of times (9 for 52)
-
-    // generate two indexes and swap those positions X amount of times (excludes possibility of something staying in place)
-    // fisher-yates shuffling
-    // for each element, pick a random index equal to or greater than current, and then swap.
 }
 void fillDeck(Card deck[52], char *faces[], char *suits[])
 {
@@ -76,13 +76,15 @@ int randRange(int lower, int upper)
 void shuffle(Card deck[])
 {
     int random;
+    Card tmp;
+
     for (int i = 0; i < 52; i++)
     {
         // we never want index 52
         // and all indexes must be >= i
         random = randRange(i, 52 - 1);
 
-        Card tmp = deck[random];
+        tmp = deck[random];
         deck[random] = deck[i];
         deck[i] = tmp;
     }
