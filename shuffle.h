@@ -25,10 +25,13 @@ int shuffle_main(int argc, char *argv[])
 
     Card cards[52];
 
+    // fill the deck with cards in order
     fillDeck(cards, FACES, SUITS);
 
+    // deal (print) the cards
     deal(cards);
 
+    // shuffle the cards ONCE using fisher-yates
     shuffle(cards);
 
     deal(cards);
@@ -45,7 +48,7 @@ void fillDeck(Card deck[52], char *faces[], char *suits[])
     {
         deck[i].face = faces[i % FACE_COUNT];
         deck[i].suit = suits[i / FACE_COUNT];
-        deck[i].value = i % FACE_COUNT + 2;
+        deck[i].value = i;
     }
 }
 void deal(Card deck[])
@@ -65,7 +68,9 @@ int randRange(int lower, int upper)
     // rand % 4 + 3
     // 0-3 + 3
 
-    return (rand() % (upper - lower + 1)) + lower;
+    int mod = (upper - lower + 1);
+
+    return (rand() % mod) + lower;
 }
 
 void shuffle(Card deck[])
@@ -74,6 +79,7 @@ void shuffle(Card deck[])
     for (int i = 0; i < 52; i++)
     {
         // we never want index 52
+        // and all indexes must be >= i
         random = randRange(i, 52 - 1);
 
         Card tmp = deck[random];
