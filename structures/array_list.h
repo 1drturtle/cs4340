@@ -46,7 +46,25 @@ int main_al(int argc, char *argv[])
     delete_al(5, listPtr);
     delete_al(10, listPtr);
 
+    destroy_al(listPtr);
+    listPtr = create_al();
+    for (int i = 0, j; i < 4; i++)
+    {
+        for (j = 0; j < 3; j++)
+            insert_al(i, listPtr);
+    }
+
     print_al(*listPtr);
+
+    purge_al(0, listPtr);
+    print_al(*listPtr);
+    purge_al(2, listPtr);
+    print_al(*listPtr);
+    purge_al(3, listPtr);
+    print_al(*listPtr);
+    purge_al(1, listPtr);
+    print_al(*listPtr);
+
     destroy_al(listPtr);
     return 0;
 }
@@ -123,7 +141,22 @@ void delete_al(int value, ArrayList *listPtr)
     // reduce length of list
     --listPtr->length;
 }
+
 void purge_al(int value, ArrayList *listPtr)
 {
-    
+    size_t i;
+    size_t count;
+
+    for (i = 0; i < listPtr->length && listPtr->array[i] < value; i++)
+        ;
+    for (count = 0; i < listPtr->length && listPtr->array[i] == value; i++, count++)
+        ;
+
+    if (count == 0)
+        return;
+
+    for (; i < listPtr->length; ++i)
+        listPtr->array[i - count] = listPtr->array[i];
+
+    listPtr->length -= count;
 }

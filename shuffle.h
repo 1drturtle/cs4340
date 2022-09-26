@@ -8,6 +8,7 @@ typedef struct card
 {
     char *face;
     char *suit;
+    int value;
 } Card;
 
 void fillDeck(Card deck[], char *faces[], char *suits[]);
@@ -44,13 +45,14 @@ void fillDeck(Card deck[52], char *faces[], char *suits[])
     {
         deck[i].face = faces[i % FACE_COUNT];
         deck[i].suit = suits[i / FACE_COUNT];
+        deck[i].value = i % FACE_COUNT + 2;
     }
 }
 void deal(Card deck[])
 {
     for (size_t i = 0; i < FACE_COUNT * SUIT_COUNT; i++)
     {
-        printf("%s of %s\n", deck[i].face, deck[i].suit);
+        printf("%s of %s (%d)\n", deck[i].face, deck[i].suit, deck[i].value);
     }
 }
 
