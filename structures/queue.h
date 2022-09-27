@@ -9,6 +9,15 @@ typedef struct queue
     NodePtr tail; // back (push)
 } Queue;
 
+typedef Queue *QueuePtr;
+
+void q_push(QueuePtr queuePtr, int value);
+int q_pop(QueuePtr queuePtr, int index);
+int q_peek(QueuePtr queuePtr, int index);
+QueuePtr q_create(QueuePtr queuePtr);
+QueuePtr q_destroy(QueuePtr queuePtr);
+void q_print(Queue queue);
+
 int main_queue(int argc, char *argv[])
 {
     // queue from a linked list

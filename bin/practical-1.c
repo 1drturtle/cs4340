@@ -22,7 +22,7 @@ char *str_bool(bool x)
     return "false";
 }
 
-int main_practice(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     puts("1)");
     srand(42);
