@@ -1,7 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-// TODO: Replace with Node when submitting
-#include "node.h"
+typedef struct node
+{
+    int value;
+    struct node *next;
+} Node;
+
+typedef Node *NodePtr;
 
 typedef struct stack
 {
@@ -23,7 +29,9 @@ int stack_peek(StackPointer stackPtr);
 void stack_print(StackPointer stackPtr);
 void resize_if_full(StackPointer stackPtr);
 
-int main_stack(int argc, char *argv[])
+// chris agrella
+// 10/1/2022
+int main(int argc, char *argv[])
 {
     // Stack
     // First in, last out
