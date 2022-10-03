@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
     StackPointer stack = NULL;
     stack = stack_create();
 
+    puts("adding 3, 4, 5 in order to stack");
     for (int i = 0; i < 3; i++)
         stack_push(stack, i + 3);
 
@@ -48,16 +49,18 @@ int main(int argc, char *argv[])
         stack_print(stack);
         printf("pop: %d\n", stack_pop(stack));
     }
-
+    puts("pushing 10 to stack and then peeking");
     stack_push(stack, 10);
     printf("peek, 10==%d\n", stack_peek(stack));
 
+    puts("adding 0-99 to stack in order");
     for (int i = 0; i < 100; i++)
         stack_push(stack, i);
 
     stack_print(stack);
+    puts("clearing stack");
     stack_clear(stack);
-    puts("clearing");
+    puts("printing stack");
     stack_print(stack);
 }
 StackPointer stack_create()

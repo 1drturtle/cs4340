@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
 
     QueuePtr queue = NULL;
     queue = q_create();
+    puts("pushing 1,5,6");
     q_push(queue, 1);
     q_push(queue, 5);
     q_push(queue, 6);
@@ -55,7 +56,9 @@ int main(int argc, char *argv[])
 
     q_print(queue); // 5->1->END
 
+    puts("clearing");
     q_clear(queue);
+    puts("printing (default behavior: -1 if no elements when peeking)");
     q_print(queue);                      // no elements, END
     printf("peek: %d\n", q_peek(queue)); // no elements (-1)
 
