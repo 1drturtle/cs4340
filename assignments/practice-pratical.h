@@ -17,24 +17,25 @@ char *caesar_shift(char *word, int shift);
 // helpers
 char *str_bool(bool x)
 {
-    if (x)
-        return "true";
-    return "false";
+    return x ? "true" : "false";
 }
 
 int main_practice(int argc, char *argv[])
 {
     puts("1)");
     srand(42);
+    // tails = 0 heads = 1
     puts("zeroes rolled from coin flip");
-    printf("zeroes (n=10_000): %d\n", zeroes_from_coins(10000));
-    printf("zeroes (n=0): %d\n", zeroes_from_coins(0));
+    printf("zeroes (n=10_000): %u\n", zeroes_from_coins(10000));
+    printf("zeroes (n=0): %u\n", zeroes_from_coins(0));
 
     puts("2)");
     srand(42);
     puts("rolls required to roll all of the same number for nd6");
-    printf("rolls required, n=1: %d\n", matching_dice(1));
-    printf("rolls required, n=10: %d\n", matching_dice(10));
+    printf("rolls required, n=0; %u\n", matching_dice(0));
+    printf("rolls required, n=1: %u\n", matching_dice(1));
+    printf("rolls required, n=3: %u\n", matching_dice(3));
+    printf("rolls required, n=10: %u\n", matching_dice(10));
     // takes a while after 10
     // printf("# required, n=11: %d\n", matching_dice(11));
 
@@ -48,9 +49,9 @@ int main_practice(int argc, char *argv[])
     puts("4)");
     // lowest possible base (char[] letters)
     puts("lowest possible base of a string");
-    printf("1010 -> %d\n", lowest_base("1010"));
-    printf("9999 -> %d\n", lowest_base("9999"));
-    printf("Z500 -> %d\n", lowest_base("Z500"));
+    printf("1010 -> %u\n", lowest_base("1010"));
+    printf("9999 -> %u\n", lowest_base("9999"));
+    printf("Z500 -> %u\n", lowest_base("Z500"));
 
     puts("5)");
     // Caesar shift (char[] letters, int shift)
@@ -88,10 +89,11 @@ unsigned int roll_random(unsigned int sides)
 unsigned int matching_dice(unsigned int n)
 {
     bool matching = false;
-    int roll = -1;
-    int cur;
     unsigned int match_count = 0;
     unsigned int total_rolls = 0;
+
+    int roll;
+    int cur;
     // roll n die
     while (match_count != n)
     {
@@ -135,23 +137,24 @@ unsigned int lowest_base(char *word)
     {
         cur = word[i];
         // if we have a letter
-        if (cur >= 65 && cur <= 90 && (cur - 65) > base)
-            base = cur - 64 + 10;
+        if (cur >= 'A' && cur <= 'Z' && (cur - 'A') > base)
+            // letters can include number base
+            base = cur - 'A' + 11;
         // if we have a number
-        else if (cur >= 48 && cur <= 57 && (cur - 48) > base)
-            base = cur - 47;
+        else if (cur >= '0' && cur <= '9' && (cur - 48) > base)
+            base = cur - '0' + 1;
     }
     return base;
 }
 // five
 char *caesar_shift(char *word, int shift)
 {
-    char *new_word = (char *)malloc(strlen(word));
+    char *new_word = (char *)calloc(sizeof(char), strlen(word) + 1);
     int letter_i;
 
     for (size_t i = 0; i < strlen(word); i++)
     {
-        letter_i = (((int)word[i] - 97 + shift) % 26) + 65;
+        letter_i = ((word[i] - 'a' + shift) % 26) + 'A';
         new_word[i] = (char)letter_i;
     }
     return new_word;

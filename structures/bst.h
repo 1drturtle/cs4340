@@ -29,6 +29,7 @@ int main_binary_tree(int argc, char *argv[])
     insert_bst(100, &tree);
     insert_bst(0, &tree);
     insert_bst(50, &tree);
+    insert_bst(75, &tree);
     insert_bst(1, &tree);
 
     print_bst(tree);
@@ -37,7 +38,9 @@ int main_binary_tree(int argc, char *argv[])
     print_bst(tree);
 
     // printf("depth: %d\n", find_depth_bst(tree));
-    destroy_bst(&tree);
+    // destroy_bst(&tree);
+    // insert_bst(0, &tree);
+    // print_bst_vertical(tree);
 
     return 0;
 }
@@ -112,12 +115,15 @@ void destroy_bst(NodePtr *treePtr)
     *treePtr = NULL;
 }
 
+// (pass in right node)
 NodePtr *successor_bst(NodePtr *treePtr)
 {
-    *treePtr = (*treePtr)->right;
-    while ((*treePtr)->left)
-        *treePtr = (*treePtr)->left;
-    return treePtr;
+    // find successor node (pointer)
+    NodePtr tree = *treePtr;
+    if (tree->left)
+        successor_bst(&(tree->left));
+    else
+        return treePtr;
 }
 void delete_bst(int value, NodePtr *treePtr)
 {
@@ -130,43 +136,24 @@ void delete_bst(int value, NodePtr *treePtr)
         delete_bst(value, &(tree->right));
     else
     {
-        // find the child
-        NodePtr child = tree->right ? tree->right : tree->left;
-        // first case: No children!
-        if (child == NULL)
+        // find the child (NULL or single child)
+        NodePtr replacement = tree->left ? tree->left : tree->right;
+        if (tree->left && tree->right)
         {
-            // first, we simply free the current node
-            free(*treePtr);
-            // then, we point the node to NULL (child is NULL in this case)
-            *treePtr = child;
+            // get ptr to ptr to successor
+            NodePtr *replacementPtr = successor_bst(&(tree->right));
+            // dereference pointer
+            replacement = *replacementPtr;
+            // move successors child to it's parent (replace)
+            *replacementPtr = replacement->right;
+            // make the replacement have the correct children
+            replacement->left = tree->left;
+            replacement->right = tree->right;
         }
-        // second case: One child
-        else if (!tree->right || !tree->left)
-        {
-            // free ourself
-            free(*treePtr);
-            // put our child as the node (deleting the current node)
-            *treePtr = child;
-        }
-        // third case: two children
-        else
-        {
-            // find successor node
-            NodePtr *childPtr = successor_bst(treePtr);
-            NodePtr child = *childPtr;
-            // move the old node's children to new node
-            child->left = tree->left;
-            child->right = tree->right;
-            // free the old node
-            free(*treePtr);
-            // set the child as the current node
-            *treePtr = child;
-
-            // KLEINER
-
-            // move successor's child up
-            //
-        }
+        // free the Node
+        free(tree);
+        // replace the node
+        *treePtr = replacement;
     }
 }
 size_t find_depth_bst(NodePtr tree)
@@ -200,5 +187,10 @@ void print_bst_vertical(NodePtr tree)
     if (tree == NULL)
         return;
     size_t depth = find_depth_bst(tree);
-    // NodePtr treeList[][];
+    if (depth == 0)
+    {
+        printf("%d\n", tree->key);
+        return;
+    }
+    // NodePtr treeList[depth][];
 }
