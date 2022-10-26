@@ -37,14 +37,10 @@ int main_binary_tree(int argc, char *argv[])
     insert_bst(75, &tree);
     insert_bst(200, &tree);
 
-    NodePtr tree2 = NULL;
-    insert_bst(5, &tree2);
-
-    NodePtr merged = merge_bst(tree, tree2);
+    NodePtr merged = merge_bst(tree, tree);
     print_bst(merged);
 
     destroy_bst(&tree);
-    destroy_bst(&tree2);
     destroy_bst(&merged);
 
     return 0;
@@ -238,21 +234,20 @@ Node *bst_to_list(NodePtr tree, size_t size)
 Node *merge_lists(Node *listA, Node *listB, size_t sizeA, size_t sizeB)
 {
     Node *merged = calloc(sizeA + sizeB, sizeof(Node));
-    size_t index;
-    for (index = 0; index < sizeA && index < sizeB; index++)
+    size_t indexA = 0, indexB = 0;
+
+    while (indexA < sizeA && indexB < sizeB)
     {
         if (listA->key < listB->key)
-            merged[index] = *listA++;
+            merged[(indexA++) + indexB] = *listA++;
         else
-            merged[index] = *listB++;
+            merged[indexA + indexB++] = *listB++;
     }
     // add remainder
-    if (index == sizeA)
-        for (; index < (sizeA + sizeB); index++)
-            merged[index] = *listB++;
-    else
-        for (; index < (sizeA + sizeB); index++)
-            merged[index] = *listA++;
+    for (; indexA < sizeA; indexA++)
+        merged[indexA + indexB] = *listA++;
+    for (; indexB < sizeB; indexB++)
+        merged[indexA + indexB] = *listB++;
     // return
     return merged;
 }
