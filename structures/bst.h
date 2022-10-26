@@ -18,29 +18,34 @@ void delete_bst(int value, NodePtr *treePtr);
 NodePtr *successor_bst(NodePtr *treePtr);
 size_t find_depth_bst(NodePtr tree);
 
+// merging
+size_t size_bst(NodePtr tree);
+Node *bst_to_list(NodePtr tree, size_t size);
+Node *merge_lists(Node *listA, Node *listB, size_t sizeA, size_t sizeB);
+NodePtr list_to_bst(Node *list, size_t size);
+NodePtr merge_bst(NodePtr treeA, NodePtr treeB);
+
 int main_binary_tree(int argc, char *argv[])
 {
     // binary search tree
     // search: O(log_2(n))
 
     NodePtr tree = NULL;
-
-    insert_bst(50, &tree);
     insert_bst(100, &tree);
-    insert_bst(0, &tree);
     insert_bst(50, &tree);
+    insert_bst(25, &tree);
     insert_bst(75, &tree);
-    insert_bst(1, &tree);
+    insert_bst(200, &tree);
 
-    print_bst(tree);
-    // print_bst_in_order(tree);
-    delete_bst(50, &tree);
-    print_bst(tree);
+    NodePtr tree2 = NULL;
+    insert_bst(5, &tree2);
 
-    // printf("depth: %d\n", find_depth_bst(tree));
-    // destroy_bst(&tree);
-    // insert_bst(0, &tree);
-    // print_bst_vertical(tree);
+    NodePtr merged = merge_bst(tree, tree2);
+    print_bst(merged);
+
+    destroy_bst(&tree);
+    destroy_bst(&tree2);
+    destroy_bst(&merged);
 
     return 0;
 }
@@ -114,10 +119,9 @@ void destroy_bst(NodePtr *treePtr)
     free(tree);
     *treePtr = NULL;
 }
-
-// (pass in right node)
 NodePtr *successor_bst(NodePtr *treePtr)
 {
+    // (pass in right node)
     // find successor node (pointer)
     NodePtr tree = *treePtr;
     if (tree->left)
@@ -193,4 +197,89 @@ void print_bst_vertical(NodePtr tree)
         return;
     }
     // NodePtr treeList[depth][];
+}
+
+size_t size_bst(NodePtr tree)
+{
+    if (tree == NULL)
+        return 0;
+
+    return size_bst(tree->left) + 1 + size_bst(tree->right);
+}
+Node *bst_to_list(NodePtr tree, size_t size)
+{
+    static Node *list = NULL;
+
+    // base case
+    if (tree == NULL)
+        return NULL;
+
+    // Sentinel Check - only allocate on first run
+    if (list == NULL)
+        list = calloc(size, sizeof(Node));
+
+    // insert left
+    bst_to_list(tree->left, 0);
+    // insert self
+    *(list++) = *tree;
+    // insert right
+    bst_to_list(tree->right, 0);
+
+    // base case (list - size)
+    if (size != 0)
+    {
+        Node *out = list - size;
+        list = NULL;
+        return out;
+    }
+    else
+        return NULL;
+}
+Node *merge_lists(Node *listA, Node *listB, size_t sizeA, size_t sizeB)
+{
+    Node *merged = calloc(sizeA + sizeB, sizeof(Node));
+    size_t index;
+    for (index = 0; index < sizeA && index < sizeB; index++)
+    {
+        if (listA->key < listB->key)
+            merged[index] = *listA++;
+        else
+            merged[index] = *listB++;
+    }
+    // add remainder
+    if (index == sizeA)
+        for (; index < (sizeA + sizeB); index++)
+            merged[index] = *listB++;
+    else
+        for (; index < (sizeA + sizeB); index++)
+            merged[index] = *listA++;
+    // return
+    return merged;
+}
+NodePtr list_to_bst(Node *list, size_t size)
+{
+    // base case
+    if (size == 0)
+        return NULL;
+
+    NodePtr root = malloc(sizeof(Node));
+    // take middle element
+    root->key = list[size / 2].key;
+    // run left
+    root->left = list_to_bst(list, size / 2);
+    // run right
+    root->right = list_to_bst(list + size / 2 + 1, size / 2 + (size % 2 - 1));
+    return root;
+}
+NodePtr merge_bst(NodePtr treeA, NodePtr treeB)
+{
+    size_t sizeA = size_bst(treeA), sizeB = size_bst(treeB);
+    Node *listA = bst_to_list(treeA, sizeA), *listB = bst_to_list(treeB, sizeB);
+
+    Node *merged = merge_lists(listA, listB, sizeA, sizeB);
+    NodePtr tree = list_to_bst(merged, sizeA + sizeB);
+    free(listA);
+    free(listB);
+    free(merged);
+    return tree;
 }
