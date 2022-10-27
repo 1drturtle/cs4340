@@ -9,7 +9,7 @@
 
 void question_1(int stars);
 void question_2(char strings[][MAX], size_t length);
-bool question_3(int num);
+bool question_3(unsigned int num);
 double question_4(char *word);
 int question_5(int (*f)(int), int n);
 
@@ -118,19 +118,15 @@ void question_2(char a[][MAX], size_t n)
         }
     }
 }
-bool question_3(int num)
+bool question_3(unsigned int num)
 {
     int sum = 0;
     // starting at 1, until num-1
     for (int i = 1; i < num; ++i)
-    {
         // if num is divisible by i
         if (num % i == 0)
-        {
             // add factor to sum
             sum += i;
-        }
-    }
     // return if perfect number (sum == number)
     return sum == num;
 }
@@ -186,8 +182,7 @@ double question_4(char *word)
         cur = word[i];
     }
     // if we are negative, switch sign
-    if (!pos)
-        out *= -1;
+    out *= pos ? 1 : -1;
     return out;
 }
 
