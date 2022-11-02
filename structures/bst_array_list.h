@@ -24,7 +24,7 @@ ArrayList *create_bst();
 void insert_bst(ArrayList *treePtr, int value);
 void delete_bst(ArrayList *treePtr);
 void destroy_bst(ArrayList *treePtr);
-void predecessor_bst(ArrayList tree, int index);
+size_t predecessor_bst(ArrayList tree, int index);
 void merge_bst(ArrayList tree1, ArrayList tree2);
 void print_in_order(ArrayList tree);
 void print_level_order(ArrayList tree);
@@ -45,7 +45,21 @@ int main_array_bst(int argc, char *argv[])
     insert_bst(bst, 75);
     insert_bst(bst, 30);
     insert_bst(bst, 0);
+    for (size_t i = 0; i < bst->capacity; i++)
+    {
+        Node n = bst->array[i];
+
+        if (!n.exists)
+            printf("NULL ");
+        else
+            printf("%d ", n.key);
+    }
+    puts("");
+
     print_level_order(*bst);
+    printf("%d\n", predecessor_bst(*bst, 1));
+    destroy_bst(bst);
+    puts("Done");
 }
 
 ArrayList *create_bst()
@@ -82,8 +96,25 @@ void insert_bst(ArrayList *treePtr, int value)
 }
 void print_in_order(ArrayList tree)
 {
-    // left to right (ascending)
-    
+    static size_t curent_index = 0;
+    // recursive left
+    if (!tree.array[curent_index].exists)
+    {
+        return;
+    }
+    curent_index = left_child(curent_index);
+    print_in_order(tree);
+
+    curent_index = parent(curent_index);
+    printf("%d, ", tree.array[curent_index].key);
+
+    curent_index = right_child(curent_index);
+    print_in_order(tree);
+
+    curent_index = parent(curent_index);
+
+    if (curent_index == 0)
+        puts("");
 }
 void print_level_order(ArrayList tree)
 {
@@ -110,6 +141,43 @@ void print_level_order(ArrayList tree)
     }
 }
 
+void delete_bst(ArrayList *treePtr)
+{
+    // delete one item from BST
+    // binary search to find index
+    // cases: 0 children, 1 child, 2 children
+}
+void destroy_bst(ArrayList *treePtr)
+{
+    free(treePtr->array);
+    free(treePtr);
+    treePtr = NULL;
+}
+size_t predecessor_bst(ArrayList tree, int index)
+{
+    // finds the next smallest node from the node at index
+
+    // if left_index+1 >= capacity || node does not exist, return
+    index = left_child(index);
+    if (index + 1 >= tree.capacity || !tree.array[index].exists)
+        return parent(index);
+
+    // left once, then right
+    while (right_child(index) + 1 < tree.capacity && tree.array[right_child(index)].exists)
+    {
+        index = right_child(index);
+    }
+    return index;
+}
+void merge_bst(ArrayList tree1, ArrayList tree2)
+{
+    // merge
+    // count nodes
+    // flatten (go left to right, like print_bst_in_order) into lists
+    // zipper merge into super sorted array
+    // use binary sort to create BST
+}
+
 // HELPERS
 // parent(i) = (i-1)/2
 size_t parent(size_t index)
@@ -126,6 +194,7 @@ size_t left_child(size_t index)
 {
     return index * 2 + 1;
 }
+// resize the array to the next row size
 void resize(ArrayList *treePtr)
 {
     // cap = old_cap*2 + 1
@@ -135,15 +204,3 @@ void resize(ArrayList *treePtr)
     // set all new nodes to null
     memset(treePtr->array + old_capacity, 0, sizeof(Node) * (treePtr->capacity - old_capacity));
 }
-
-// arr[i].key = ...
-
-// total # of nodes = sum 2^(i-1)
-
-// give each node a null flag or make ArrayList[*Node]
-
-// merge
-// count nodes
-// flatten (go left to right, like print_bst_in_order) into lists
-// zipper merge into super sorted array
-// use binary sort to create BST
