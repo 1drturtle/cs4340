@@ -10,6 +10,15 @@ typedef struct node
 
 typedef Node *NodePtr;
 
+typedef struct qnode
+{
+    NodePtr node;
+    size_t depth;
+    struct qnode *next;
+} QNode;
+
+typedef QNode *QNodePtr;
+
 void print_bst(NodePtr tree);
 void print_bst_in_order(NodePtr tree);
 void insert_bst(int value, NodePtr *treePtr);
@@ -17,6 +26,7 @@ void destroy_bst(NodePtr *treePtr);
 void delete_bst(int value, NodePtr *treePtr);
 NodePtr *successor_bst(NodePtr *treePtr);
 size_t find_depth_bst(NodePtr tree);
+void print_level_order_bst(NodePtr tree);
 
 // merging
 size_t size_bst(NodePtr tree);
@@ -39,6 +49,8 @@ int main_binary_tree(int argc, char *argv[])
 
     NodePtr merged = merge_bst(tree, tree);
     print_bst(merged);
+
+    print_level_order_bst(merged);
 
     destroy_bst(&tree);
     destroy_bst(&merged);
@@ -277,4 +289,58 @@ NodePtr merge_bst(NodePtr treeA, NodePtr treeB)
     free(listB);
     free(merged);
     return tree;
+}
+
+void print_level_order_bst(NodePtr tree)
+{
+    // static head and tail
+    static QNodePtr head = NULL, tail = NULL;
+
+    // do nothing if tree is empty
+    if (tree == NULL)
+        return;
+
+    // add root as head & tail if no queue
+    if (head == NULL)
+    {
+        head = tail = malloc(sizeof(QNode));
+        head->node = tree;
+        head->depth = 0;
+        head->next = NULL;
+    }
+
+    // pop head and push it's children
+    QNodePtr current = head;
+
+    if (current->node->left != NULL)
+    {
+        tail->next = malloc(sizeof(QNode));
+        tail = tail->next;
+        tail->node = current->node->left;
+        tail->depth = current->depth + 1;
+        tail->next = NULL;
+    }
+    if (current->node->right != NULL)
+    {
+        tail->next = malloc(sizeof(QNodePtr));
+        tail = tail->next;
+        tail->node = current->node->right;
+        tail->depth = current->depth + 1;
+        tail->next = NULL;
+    }
+    if (head == tail)
+        tail = NULL;
+    head = head->next;
+
+    // print old head
+    printf("%d,", current->node->key);
+
+    // check if new head is next depth, print \n
+    if (head == NULL || head->depth > current->depth)
+        puts("");
+
+    // call function again if new head is not null
+    free(current);
+    if (head != NULL)
+        print_level_order_bst(tree);
 }
