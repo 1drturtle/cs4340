@@ -26,8 +26,10 @@ void delete_bst(ArrayList *treePtr, int value);
 void destroy_bst(ArrayList *treePtr);
 size_t predecessor_bst(ArrayList tree, int index);
 
-void merge_bst(ArrayList tree1, ArrayList tree2);
+ArrayList *merge_bst(ArrayList tree1, ArrayList tree2);
 Node *flatten_bst(ArrayList tree, size_t length);
+Node *merge_lists(Node *listA, Node *listB, size_t sizeA, size_t sizeB);
+ArrayList *list_to_bst(Node *list, size_t size);
 
 void print_in_order(ArrayList tree);
 void print_level_order(ArrayList tree);
@@ -253,15 +255,19 @@ size_t predecessor_bst(ArrayList tree, int index)
     }
     return index;
 }
-void merge_bst(ArrayList tree1, ArrayList tree2)
+size_t merge_bst(ArrayList tree1, ArrayList tree2)
 {
     // merge
     // count nodes
     size_t length1 = node_count(tree1);
     size_t length2 = node_count(tree2);
     // flatten (go left to right, like print_bst_in_order) into lists
-
+    Node *list1 = flatten_bst(tree1, length1);
+    Node *list2 = flatten_bst(tree2, length2);
     // zipper merge into super sorted array
+    Node *merged = merge_lists(list1, list2, length1, length2);
+    free(list1);
+    free(list2);
     // use binary sort to create BST
 }
 Node *flatten_bst(ArrayList tree, size_t length)
@@ -301,7 +307,29 @@ Node *flatten_bst(ArrayList tree, size_t length)
     else
         return NULL;
 }
+Node *merge_lists(Node *listA, Node *listB, size_t sizeA, size_t sizeB)
+{
+    Node *merged = calloc(sizeA + sizeB, sizeof(Node));
+    size_t indexA = 0, indexB = 0;
 
+    while (indexA < sizeA && indexB < sizeB)
+    {
+        if (listA->key < listB->key)
+            merged[(indexA++) + indexB] = *listA++;
+        else
+            merged[indexA + indexB++] = *listB++;
+    }
+    // add remainder
+    for (; indexA < sizeA; indexA++)
+        merged[indexA + indexB] = *listA++;
+    for (; indexB < sizeB; indexB++)
+        merged[indexA + indexB] = *listB++;
+    // return
+    return merged;
+}
+ArrayList *list_to_bst(Node *list, size_t size)
+{
+}
 // HELPERS
 // parent(i) = (i-1)/2
 size_t parent(size_t index)
