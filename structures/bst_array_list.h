@@ -266,6 +266,40 @@ void merge_bst(ArrayList tree1, ArrayList tree2)
 }
 Node *flatten_bst(ArrayList tree, size_t length)
 {
+    static size_t current_index = 0;
+    static Node *flattened = NULL;
+
+    // empty list
+    if (!node_exists(tree, current_index))
+        return NULL;
+
+    if (flattened == NULL)
+        flattened = calloc(length, sizeof(Node));
+
+    // insert left
+    current_index = left_child(current_index);
+    flatten_bst(tree, 0);
+    // insert self
+    current_index = parent(current_index);
+
+    *(flattened) = tree.array[current_index];
+    flattened++;
+    // insert right
+    current_index = right_child(current_index);
+    flatten_bst(tree, 0);
+
+    current_index = parent(current_index);
+
+    // base case (list - size)
+    if (length != 0)
+    {
+        Node *out = flattened - length;
+        flattened = NULL;
+        current_index = 0;
+        return out;
+    }
+    else
+        return NULL;
 }
 
 // HELPERS
@@ -303,7 +337,7 @@ size_t node_count(ArrayList tree)
 }
 bool node_exists(ArrayList tree, size_t index)
 {
-    if (index + 1 >= tree.capacity)
+    if (index >= tree.capacity)
         return false;
     return tree.array[index].exists;
 }
