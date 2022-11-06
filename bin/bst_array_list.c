@@ -49,7 +49,7 @@ ArrayList BST
 Chris Agrella
 11.6.2022
 */
-int main_array_bst(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     ArrayList *bst = NULL;
     puts("creating tree...");
