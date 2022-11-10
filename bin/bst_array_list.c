@@ -226,7 +226,6 @@ void delete_bst(ArrayList *treePtr, int value)
                 : right_child(current_index);
         if (node_exists(*treePtr, left_child(current_index)) && node_exists(*treePtr, right_child(current_index)))
         {
-            // TODO: 2 child case
             replacement_index = predecessor_bst(*treePtr, current_index);
             key = treePtr->array[replacement_index].key;
             delete_bst(treePtr, key);

@@ -6,6 +6,11 @@ void MergeSort(int *A, size_t length);
 void mergesort(int *A, int *B, size_t length);
 void print_array(int *array, size_t length);
 
+/*
+Merge Sort
+11/7
+Chris Agrella
+*/
 int main_merge_sort(int argc, char *argv[])
 {
     /*
