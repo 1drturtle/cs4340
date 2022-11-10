@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
     free(copy);
 
     // question 4
+    // not sure if you meant that they need to be separated by spaces, but since it wasn't included in assignment assuming no
     puts("-- question 4");
     // 8 characters long * 3 strings + NULL
     puts("-> creating string to copy to");
