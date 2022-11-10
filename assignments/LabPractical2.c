@@ -12,7 +12,7 @@ typedef struct name
 typedef Name *NamePtr;
 
 char **create_arr(size_t size);
-char **resize_arr(char **arr, size_t new_size);
+void resize_arr(char **arr, size_t new_size);
 char **copy_arr(char **arr, size_t size);
 void concat_array(char *string, char **arr, size_t size);
 char *full_name(NamePtr namePtr);
@@ -31,11 +31,11 @@ int main(int argc, char *argv[])
 
     // question 2
     puts("-- question 2 --");
-    str_array = resize_arr(str_array, 3);
-    puts("-> resize to 3");
-    puts("-> set i=2 to hello, world");
-    str_array[2] = "hello, world";
-    puts(str_array[2]);
+    resize_arr(str_array, 3);
+    puts("-> resize to 3 * 2 = 6");
+    puts("-> set i=5 to hello, world");
+    str_array[5] = "hello, world";
+    puts(str_array[5]);
 
     // question 3
     puts("-- question 3 --");
@@ -119,10 +119,10 @@ char **create_arr(size_t size)
     // clear and allocate, return
     return calloc(size, sizeof(char *));
 }
-char **resize_arr(char **arr, size_t new_size)
+void resize_arr(char **arr, size_t new_size)
 {
     // re-allocate, return
-    return realloc(arr, new_size * sizeof(char *));
+    arr = realloc(arr, 2 * new_size * sizeof(char *));
 }
 char **copy_arr(char **arr, size_t size)
 {
