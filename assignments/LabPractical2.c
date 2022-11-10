@@ -17,6 +17,11 @@ char **copy_arr(char **arr, size_t size);
 void concat_array(char *string, char **arr, size_t size);
 char *full_name(NamePtr namePtr);
 
+/*
+Lab Practical 2
+11/10/2022
+Chris Agrella
+*/
 int main(int argc, char *argv[])
 {
     // question 1
