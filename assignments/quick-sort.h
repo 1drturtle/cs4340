@@ -18,9 +18,9 @@ int main_quick_sort(int argc, char *argv[])
     - repeat 3 with sub-lists recursively
     https://en.wikipedia.org/wiki/Quicksort#Hoare_partition_scheme
     */
-    int A[10] = {10, 1, 9, 2, 8, 3, 7, 4, 6, 5};
-    QuickSort(A, 10 - 1);
-    for (size_t i = 0; i < 10; i++)
+    int A[4] = {4, 3, 100, 3};
+    QuickSort(A, 4 - 1);
+    for (size_t i = 0; i < 4; i++)
     {
         printf("%d, ", A[i]);
     }
@@ -33,6 +33,7 @@ void QuickSort(int *arr, size_t size)
 
     size_t p = partition(arr, size);
     // sort [0, p]
+    QuickSort(arr, p + 1);
     // sort [p, size]
 }
 size_t partition(int *arr, size_t size)
@@ -41,13 +42,10 @@ size_t partition(int *arr, size_t size)
         return 0;
 
     int pivot = arr[size / 2];
+    int i = -1, j = size + 1;
     int tmp;
 
-    // TODO: Fix code (j & i become -1, edge case?)
-    int i = -1;
-    int j = size + 1;
-
-    while (1 == 1)
+    while (1)
     {
         do
         {
@@ -60,14 +58,7 @@ size_t partition(int *arr, size_t size)
         } while (arr[j] > pivot);
 
         if (i >= j)
-        {
             return j;
-        }
-        for (size_t i = 0; i < size; i++)
-        {
-            printf("%d, ", arr[i]);
-        }
-        puts("");
 
         tmp = arr[i];
         arr[i] = arr[j];

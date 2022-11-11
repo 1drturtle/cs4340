@@ -29,6 +29,7 @@ int main_hashmap(int argc, char *argv[])
     // use hash function to turn string into index
     // store key in hash index
     // no infinite memory, collisions are inevitable
+    // resize and shrink when necessary (high and low load factor)
 }
 
 /*
@@ -59,4 +60,31 @@ mod to determine index
 
 "abc"
 'a'*1 + 'b'*32 + 'c'*32^2
+*/
+
+/*
+Open Addressing
+
+ArrayList[NodePtr]
+- Insert
+    - search until empty spot
+    - if key already exists, overwrite
+    - otherwise, insert at first tombstone/empty spot fre
+
+- when index is full
+- simply put it somewhere else (farther down)
+
+when you delete something,
+- put a tombstone signifying something existed but was deleted
+- [A, X, C]
+
+resize
+- new 2x size array-list
+- rehash and move everything
+
+- scenario:
+hash function likes to cluster
+- fix:
+https://en.wikipedia.org/wiki/Quadratic_probing
+For m = 2^n, a good choice for the constants are c1 = c2 = 1/2
 */
