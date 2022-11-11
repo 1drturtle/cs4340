@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef struct node
 {
@@ -27,6 +28,7 @@ void delete_bst(int value, NodePtr *treePtr);
 NodePtr *successor_bst(NodePtr *treePtr);
 size_t find_depth_bst(NodePtr tree);
 void print_level_order_bst(NodePtr tree);
+void full_print_bst(NodePtr tree);
 
 // merging
 size_t size_bst(NodePtr tree);
@@ -50,7 +52,7 @@ int main_binary_tree(int argc, char *argv[])
     NodePtr merged = merge_bst(tree, tree);
     print_bst(merged);
 
-    print_level_order_bst(merged);
+    full_print_bst(tree);
 
     destroy_bst(&tree);
     destroy_bst(&merged);
@@ -194,18 +196,6 @@ size_t find_depth_bst(NodePtr tree)
         return d;
     }
 }
-void print_bst_vertical(NodePtr tree)
-{
-    if (tree == NULL)
-        return;
-    size_t depth = find_depth_bst(tree);
-    if (depth == 0)
-    {
-        printf("%d\n", tree->key);
-        return;
-    }
-    // NodePtr treeList[depth][];
-}
 
 size_t size_bst(NodePtr tree)
 {
@@ -340,7 +330,8 @@ void print_level_order_bst(NodePtr tree)
         puts("");
 
     // call function again if new head is not null
-    free(current);
+    if (current != NULL)
+        free(current);
     if (head != NULL)
         print_level_order_bst(tree);
 }
