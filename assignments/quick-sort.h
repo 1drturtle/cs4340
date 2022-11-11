@@ -19,7 +19,7 @@ int main_quick_sort(int argc, char *argv[])
     https://en.wikipedia.org/wiki/Quicksort#Hoare_partition_scheme
     */
     int A[10] = {10, 1, 9, 2, 8, 3, 7, 4, 6, 5};
-    QuickSort(A, 10);
+    QuickSort(A, 10 - 1);
     for (size_t i = 0; i < 10; i++)
     {
         printf("%d, ", A[i]);
@@ -32,13 +32,8 @@ void QuickSort(int *arr, size_t size)
         return;
 
     size_t p = partition(arr, size);
-    /*
-    size=10
-    arr, 5
-    arr + 5, 5
-    */
-    QuickSort(arr, size / 2);                         // working
-    QuickSort(arr + size / 2, size / 2 + (size % 2)); // broken
+    // sort [0, p]
+    // sort [p, size]
 }
 size_t partition(int *arr, size_t size)
 {
@@ -54,14 +49,25 @@ size_t partition(int *arr, size_t size)
 
     while (1 == 1)
     {
-        while (arr[i] < pivot)
+        do
+        {
             i++;
+        } while (arr[i] < pivot);
 
-        while (arr[j] > pivot)
+        do
+        {
             j--;
+        } while (arr[j] > pivot);
 
         if (i >= j)
+        {
             return j;
+        }
+        for (size_t i = 0; i < size; i++)
+        {
+            printf("%d, ", arr[i]);
+        }
+        puts("");
 
         tmp = arr[i];
         arr[i] = arr[j];

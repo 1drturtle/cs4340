@@ -11,10 +11,12 @@ typedef struct node
     struct node *next;
 } Node;
 
+typedef Node *NodePtr;
+
 typedef struct hashmap
 {
-    // array of nodes
-    Node *array;
+    // array of NodePtr
+    NodePtr *array;
     // total # of nodes
     size_t size;
     // number of slots in array
@@ -47,4 +49,14 @@ Assignment one: Separate Chaining
     - Malloc, move new nodes, free
 
 More recent accessed, more likely to be accessed again
+
+HASH
+----
+ASCII value of characters
+multiply each one by next largest power of 32
+
+mod to determine index
+
+"abc"
+'a'*1 + 'b'*32 + 'c'*32^2
 */
