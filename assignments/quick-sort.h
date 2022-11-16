@@ -4,48 +4,52 @@
 
 void QuickSort(int *arr, size_t size);
 size_t partition(int *arr, size_t size);
+void mid_of_three(int *arr, size_t size);
+void print_array(int *arr, size_t size);
+int medianThree(int a, int b, int c);
 
 int main_quick_sort(int argc, char *argv[])
 {
-    /*
-    "Pivot" - one piece of data that is roughly equal to median of data
-    everything less of pivot is moved left and everything greater is moved right
-
-    partition
-    - find median of 0, mid, end
-    - move median to middle of list
-    - run quicksort
-    - repeat 3 with sub-lists recursively
-    https://en.wikipedia.org/wiki/Quicksort#Hoare_partition_scheme
-    */
-    int A[4] = {4, 3, 100, 3};
-    QuickSort(A, 4 - 1);
-    for (size_t i = 0; i < 4; i++)
+    srand(42);
+    size_t LIST_SIZE = 20;
+    int array[20];
+    for (size_t i = 0; i < LIST_SIZE; i++)
     {
-        printf("%d, ", A[i]);
+        array[i] = rand() % LIST_SIZE;
     }
-    puts("");
+    print_array(array, LIST_SIZE);
+    QuickSort(array, LIST_SIZE);
+    print_array(array, LIST_SIZE);
 }
 void QuickSort(int *arr, size_t size)
 {
+    mid_of_three(arr, size);
+    size_t p = partition(arr, size);
     if (size <= 1)
         return;
 
-    size_t p = partition(arr, size);
-    // sort [0, p]
-    QuickSort(arr, p + 1);
-    // sort [p, size]
+    QuickSort(arr, p);
+    // A[10]
+    // p = 5
+    // 0..5 == 6
+    // 6..9
+    QuickSort(arr + p, size);
 }
 size_t partition(int *arr, size_t size)
 {
-    if (size == 1)
+    if (size <= 1)
+    {
         return 0;
-
+    }
     int pivot = arr[size / 2];
-    int i = -1, j = size + 1;
-    int tmp;
 
-    while (1)
+    // Left index
+    int i = -1;
+
+    // Right index
+    int j = size;
+
+    while (1 == 1)
     {
         do
         {
@@ -57,11 +61,35 @@ size_t partition(int *arr, size_t size)
             j--;
         } while (arr[j] > pivot);
 
+        // If the indices crossed, return
         if (i >= j)
             return j;
 
+        // Swap the elements at the left and right indices
         tmp = arr[i];
         arr[i] = arr[j];
         arr[j] = tmp;
     }
+}
+void mid_of_three(int *arr, size_t size)
+{
+    int tmp;
+    if (arr[0] > arr[size / 2])
+    {
+        tmp = arr[0];
+        arr[0] = arr[size / 2];
+        arr[size / 2] = tmp;
+    }
+    if (arr[size / 2] > arr[size - 1])
+    {
+        tmp = arr[size - 1];
+        arr[size - 1] = arr[size / 2];
+        arr[size / 2] = tmp;
+    }
+}
+void print_array(int *arr, size_t size)
+{
+    for (size_t i = 0; i < size; i++)
+        printf("%d, ", arr[i]);
+    puts("");
 }
