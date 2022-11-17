@@ -12,9 +12,9 @@ typedef struct name
 typedef Name *NamePtr;
 
 char **create_arr(size_t size);
-void resize_arr(char **arr, size_t new_size);
+void resize_arr(char ***arr, size_t new_size);
 char **copy_arr(char **arr, size_t size);
-void concat_array(char *string, char **arr, size_t size);
+void concat_array(char **string, char **arr, size_t size);
 char *full_name(NamePtr namePtr);
 
 /*
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 
     // question 2
     puts("-- question 2 --");
-    resize_arr(str_array, 3);
+    resize_arr(&str_array, 3);
     puts("-> resize to 3 * 2 = 6");
     puts("-> set i=5 to hello, world");
     str_array[5] = "hello, world";
@@ -68,10 +68,10 @@ int main(int argc, char *argv[])
     puts("-- question 4");
     // 8 characters long * 3 strings + NULL
     puts("-> creating string to copy to");
-    char *concat = calloc(8 * 3 + 1, sizeof(char));
+    char *concat = calloc(1, sizeof(char));
 
     puts("-> concat str_array into new string");
-    concat_array(concat, str_array, 3);
+    concat_array(&concat, str_array, 3);
 
     puts("-> printing concatenated string");
     puts(concat);
@@ -125,10 +125,10 @@ char **create_arr(size_t size)
     // clear and allocate, return
     return calloc(size, sizeof(char *));
 }
-void resize_arr(char **arr, size_t new_size)
+void resize_arr(char ***arr, size_t new_size)
 {
     // re-allocate, return
-    arr = realloc(arr, 2 * new_size * sizeof(char *));
+    *arr = realloc(*arr, 2 * new_size * sizeof(char *));
 }
 char **copy_arr(char **arr, size_t size)
 {
@@ -145,12 +145,20 @@ char **copy_arr(char **arr, size_t size)
     }
     return new;
 }
-void concat_array(char *string, char **arr, size_t size)
+void concat_array(char **string, char **arr, size_t size)
 {
+    size_t big_size = strlen(*string) + 1;
+    size_t i;
+
+    for (i = 0; i < size; i++)
+        big_size += strlen(arr[i]);
+
+    *string = realloc(*string, sizeof(char) * big_size);
+
     // for each
-    for (size_t i = 0; i < size; i++)
+    for (i = 0; i < size; i++)
         // concat to end
-        strcat(string, arr[i]);
+        strcat(*string, arr[i]);
 }
 char *full_name(NamePtr namePtr)
 {
