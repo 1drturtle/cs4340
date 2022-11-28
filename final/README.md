@@ -25,7 +25,6 @@ struct in_addr {
 };
 ```
 
-
 ## Challenges
 
 - All network information needed to be converted to a "network byte order". Fortunately C had functions to do that

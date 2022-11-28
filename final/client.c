@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
     printf("Socket Bound\n");
 
     puts("Connected. Starting program");
+    // run client handler with new socket
     handler(client_sock);
 
     // make sure we close the socket

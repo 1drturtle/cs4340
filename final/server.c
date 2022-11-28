@@ -8,8 +8,11 @@
 // math!
 #include <math.h>
 
-#pragma comment(lib, "ws2_32.lib") // Winsock Library
+// compiler flag to add more information to compiler
+// searches for the .lib file
+#pragma comment(lib, "ws2_32.lib") // Winsock2 Library
 
+// after socket is established, this function actually runs the logic
 void client_handler(SOCKET sock);
 
 int main(int argc, char *argv[])
@@ -67,10 +70,14 @@ int main(int argc, char *argv[])
     // Accept and incoming connection
     puts("Waiting for incoming connections...");
 
+    // client holds client IP information
     struct sockaddr_in client;
-    int addr_len = sizeof(struct sockaddr_in);
+    // size of socket
+    size_t addr_len = sizeof(struct sockaddr_in);
+    // new socket bound to client
     SOCKET new_socket;
 
+    // This will establish new client connections forever until the OS declines or server is CTRL+C'd.
     while ((new_socket = accept(server_sock, (struct sockaddr *)&client, &addr_len)) != INVALID_SOCKET)
     {
         client_handler(new_socket);
@@ -85,8 +92,9 @@ int main(int argc, char *argv[])
 
     puts("Server stopping...");
 
-    // clean up the library
+    // ensure socket is closed so it doesn't stay binding
     closesocket(server_sock);
+    // clean up the library
     WSACleanup();
 }
 void client_handler(SOCKET sock)
