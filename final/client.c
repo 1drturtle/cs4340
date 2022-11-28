@@ -11,16 +11,11 @@
 #define HOST "127.0.0.1"
 #define PORT 8888
 
+void handler(SOCKET client_sock);
+
 int main(int argc, char *argv[])
 {
     printf("--- Connecting ...");
-    // trig type (binary, but takes integer)
-    // sin:  1  cos: 2  tan: 3
-    // asin: 4 acos: 5 atan: 6
-
-    double user_angle;
-    char trig_type_buf[10];
-    int trig_type;
 
     // library
     WSADATA wsa;
@@ -35,7 +30,7 @@ int main(int argc, char *argv[])
         printf("Failed. Error Code : %d", WSAGetLastError());
         return 1;
     }
-    printf("Lib✓");
+    printf("Library Created");
 
     // Create a socket
     // socket(AF_INET, SOCK_STREAM, 0)
@@ -46,7 +41,7 @@ int main(int argc, char *argv[])
     {
         printf("Could not create socket : %d\n", WSAGetLastError());
     }
-    printf("Sock✓");
+    printf("Socket Created");
 
     // populate server information
     // host is static, and inet_addr converts it to a machine-usable internet address
@@ -63,13 +58,30 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    printf("Bind✓\n");
+    printf("Socket Bound\n");
 
-    // connected. driver code above
-
-    int send_status;
-    double result = 0;
     puts("Connected. Starting program");
+    handler(client_sock);
+
+    // make sure we close the socket
+    closesocket(client_sock);
+    // break down the library
+    WSACleanup();
+    return 0;
+}
+void handler(SOCKET client_sock)
+{
+
+    // angle that user provides (radian)
+    double user_angle;
+    // trig type that user provides 1-6 (or 9 to quit)
+    int trig_type;
+    // result from server (radian)
+    double result = 0;
+
+    // trig type (binary, but takes integer)
+    // sin:  1  cos: 2  tan: 3
+    // asin: 4 acos: 5 atan: 6
     while (1)
     {
         // fetch user arguments
@@ -78,12 +90,13 @@ int main(int argc, char *argv[])
 
         printf("Enter Math to perform. Sin=1, Cos=2, Tan=3. (add 3 for inverse, 9 for quit) > ");
         scanf("%d", &trig_type);
-
+        // trig_type is 0 on invalid input
         if (trig_type == 0)
         {
             puts("\nInvalid Angle or Type performed, looping.");
             continue;
         }
+        // break if 9
         else if (trig_type == 9)
         {
             puts("Quitting...");
@@ -113,6 +126,4 @@ int main(int argc, char *argv[])
         // step three: loop! 🔁🔁
         puts("\nAgain!");
     }
-    closesocket(client_sock);
-    return 0;
 }

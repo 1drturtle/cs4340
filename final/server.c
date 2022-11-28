@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
         printf("Failed. Error Code : %d\n", WSAGetLastError());
         return 1;
     }
-    printf("Lib✅");
+    puts("Library initialized");
 
     // make a struct to store our (server) information
     struct sockaddr_in server;
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    printf("Sock");
+    puts("Socket Created");
 
     // bind the socket (reserves the port for this process)
     if (bind(server_sock, (struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR)
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
         printf("Bind failed with error code : %d", WSAGetLastError());
         exit(EXIT_FAILURE);
     }
-    printf("Bind✅\n");
+    puts("Socket Bound\n");
 
     // Listen to incoming connections
     listen(server_sock, 3);
@@ -68,12 +68,8 @@ int main(int argc, char *argv[])
     puts("Waiting for incoming connections...");
 
     struct sockaddr_in client;
-    char *serv_msg;
-    SOCKET new_socket;
     int addr_len = sizeof(struct sockaddr_in);
-
-    int received_int, client_input;
-    double to_receive;
+    SOCKET new_socket;
 
     while ((new_socket = accept(server_sock, (struct sockaddr *)&client, &addr_len)) != INVALID_SOCKET)
     {
@@ -162,7 +158,7 @@ void client_handler(SOCKET sock)
         {
             break;
         }
-        puts("🔁");
+        puts("Repeating...");
     }
 
     puts("Connection closed");
